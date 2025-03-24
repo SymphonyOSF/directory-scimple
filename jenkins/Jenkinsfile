@@ -16,8 +16,19 @@ node("build-directory-jenkins-agent") {
         }
 
         stage("Publish the packages") {
-//             deployOnArtfifactory('scim-server/target/scim-server-1.0.0-SNAPSHOT.jar', 'cip-local-dev/directory-scimple/')
-            mvn('deploy -DskipTests')
+            def readPom = readMavenPom file: 'pom.xml'
+            def version = "${readPom.version}"
+            mvn('deploy -DskipTests -DskipNexusStaging ')
+            def artifactsToDeploy = [
+              'scim-spec-schema',
+              'scim-server',
+              'scim-core'
+            ]
+            dir('target/nexus-staging/deferred/org/apache/directory/scimple') {
+              artifactsToDeploy.each { artifactName ->
+                deployOnArtifactory("${artifactName}/${version}/${artifactName}-${version}.jar", 'cip-local-dev/directory-scimple/')
+              }
+            }
         }
     }
 }
@@ -30,7 +41,7 @@ def mvn(String cmd) {
     }
 }
 
-def deployOnArtfifactory(filename, target_folder) {
+def deployOnArtifactory(filename, target_folder) {
     echo "Deploying the Directory-scimple to Artifactory"
     def artifactoryServer = Artifactory.server 'Symphony-Production-Artifactory'
     def buildInfo = Artifactory.newBuildInfo()
