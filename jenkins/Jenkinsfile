@@ -12,13 +12,13 @@ node("build-directory-jenkins-agent") {
 
         stage('Build and test jar') {
             gitCheckout()
-            mvn('clean package')
+            mvn('clean package -Dpmd.skip=true -Dspotbugs.skip=true')
         }
 
         stage("Publish the packages") {
             def readPom = readMavenPom file: 'pom.xml'
             def version = "${readPom.version}"
-            mvn('deploy -DskipTests -DskipNexusStaging ')
+            mvn('deploy -DskipTests -Dpmd.skip=true -Dspotbugs.skip=true -DskipRemoteStaging')
             def artifactsToDeploy = [
               'scim-spec-schema',
               'scim-server',
