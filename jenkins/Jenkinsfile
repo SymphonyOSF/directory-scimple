@@ -23,7 +23,9 @@ node("build-directory-jenkins-agent") {
               ['scim-server', 'scim-server'],
               ['scim-core', 'scim-core']
             ]
-            artifactsToDeploy.each { [path, name] ->
+            artifactsToDeploy.each { artifact ->
+                def path = artifact[0]
+                def name = artifact[1]
               deployOnArtifactory("${path}/target/${name}-${version}.jar", 'cip-local-dev/directory-scimple/')
             }
         }
