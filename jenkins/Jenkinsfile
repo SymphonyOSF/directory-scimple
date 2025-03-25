@@ -12,7 +12,7 @@ node("build-directory-jenkins-agent") {
 
         stage('Build and test jar') {
             gitCheckout()
-            mvn('clean package -Dpmd.skip=true -Dspotbugs.skip=true')
+            mvn('clean package -Dpmd.skip=true -Dspotbugs.skip=true -DskipTests -DskipITs')
         }
 
         stage("Publish the packages") {
@@ -26,7 +26,9 @@ node("build-directory-jenkins-agent") {
             artifactsToDeploy.each { artifact ->
                 def path = artifact[0]
                 def name = artifact[1]
-              deployOnArtifactory("${path}/target/${name}-${version}.jar", 'libs-release/org/apache/directory/scimple/')
+              deployOnArtifactory(
+                "${path}/target/${name}-${version}.jar",
+                "libs-release/org/apache/directory/scimple/${version}/")
             }
         }
     }
