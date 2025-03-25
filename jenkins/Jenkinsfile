@@ -42,7 +42,7 @@ def mvn(String cmd) {
 }
 
 def deployOnArtifactory(filename, target_folder) {
-    echo "Deploying the Directory-scimple to Artifactory"
+    echo "Deploying the ${filename} -> ${target_folder} to Artifactory"
     def artifactoryServer = Artifactory.server 'Symphony-Production-Artifactory'
     def buildInfo = Artifactory.newBuildInfo()
     buildInfo.name = "${filename}"
