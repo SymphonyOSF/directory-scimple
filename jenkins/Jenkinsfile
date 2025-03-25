@@ -26,7 +26,7 @@ node("build-directory-jenkins-agent") {
             artifactsToDeploy.each { artifact ->
                 def path = artifact[0]
                 def name = artifact[1]
-              deployOnArtifactory("${path}/target/${name}-${version}.jar", 'cip-local-dev/directory-scimple/')
+              deployOnArtifactory("${path}/target/${name}-${version}.jar", 'libs-release/org/apache/directory/scimple/')
             }
         }
     }
