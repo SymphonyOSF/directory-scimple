@@ -28,7 +28,7 @@ node("build-directory-jenkins-agent") {
                 def name = artifact[1]
               deployOnArtifactory(
                 "${path}/target/${name}-${version}.jar",
-                "cip-local-dev/org/apache/directory/scimple/${version}/")
+                "cip-local-dev/org/apache/directory/scimple/${name}/${version}/")
             }
         }
     }
