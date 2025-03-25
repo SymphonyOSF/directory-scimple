@@ -58,6 +58,8 @@
     <!-- default surefire/failsafe arg lines to empty-->
     <jacoco.argline />
     <jacoco.it.argline />
+    <artifactory.url>https://repo.symphony.com/artifactory</artifactory.url>
+    <deploy-plugin.version>2.7</deploy-plugin.version>
   </properties>
 
   <modules>
@@ -368,16 +370,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.7.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>apache.releases.https</serverId>
-          <nexusUrl>https://repository.apache.org/</nexusUrl>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
@@ -401,6 +393,11 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${deploy-plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -831,6 +828,19 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>symphony</id>
+      <name>Symphony Releases</name>
+      <url>${artifactory.url}/libs-release-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>Symphony Snapshots</name>
+      <url>${artifactory.url}/libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <reporting>
     <plugins>
