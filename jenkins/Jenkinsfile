@@ -28,7 +28,7 @@ node("build-directory-jenkins-agent") {
                 def name = artifact[1]
               deployOnArtifactory(
                 "${path}/target/${name}-${version}.jar",
-                "libs-release/org/apache/directory/scimple/${version}/")
+                "cip-local-dev/org/apache/directory/scimple/${version}/")
             }
         }
     }
@@ -43,32 +43,17 @@ def mvn(String cmd) {
 }
 
 def deployOnArtifactory(filename, target_folder) {
-    withCredentials([usernamePassword(credentialsId: 'repo-symphony', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-          echo "Deploying the ${filename} -> ${target_folder} to Artifactory"
-          def artifactoryServer = Artifactory.server 'Symphony-Production-Artifactory'
-          def buildInfo = Artifactory.newBuildInfo()
-          buildInfo.name = "${filename}"
-          def uploadSpec = """{
-              "files": [{
-                  "pattern": "${filename}",
-                  "target": "${target_folder}"
-                  }
-                  ]
-          }"""
-          artifactoryServer.upload(uploadSpec, true)
-          artifactoryServer.publishBuildInfo(buildInfo)
-    }
-//     echo "Deploying the ${filename} -> ${target_folder} to Artifactory"
-//     def artifactoryServer = Artifactory.server 'Symphony-Production-Artifactory'
-//     def buildInfo = Artifactory.newBuildInfo()
-//     buildInfo.name = "${filename}"
-//     def uploadSpec = """{
-//         "files": [{
-//             "pattern": "${filename}",
-//             "target": "${target_folder}"
-//             }
-//             ]
-//     }"""
-//     artifactoryServer.upload(uploadSpec, true)
-//     artifactoryServer.publishBuildInfo(buildInfo)
+    echo "Deploying the ${filename} -> ${target_folder} to Artifactory"
+    def artifactoryServer = Artifactory.server 'Symphony-Production-Artifactory'
+    def buildInfo = Artifactory.newBuildInfo()
+    buildInfo.name = "${filename}"
+    def uploadSpec = """{
+        "files": [{
+            "pattern": "${filename}",
+            "target": "${target_folder}"
+            }
+            ]
+    }"""
+    artifactoryServer.upload(uploadSpec, true)
+    artifactoryServer.publishBuildInfo(buildInfo)
 }
