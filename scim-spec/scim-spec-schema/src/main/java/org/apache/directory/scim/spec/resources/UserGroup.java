@@ -25,24 +25,116 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlType;
-import lombok.Data;
 import org.apache.directory.scim.spec.annotation.ScimAttribute;
 import org.apache.directory.scim.spec.annotation.ScimResourceIdReference;
 import org.apache.directory.scim.spec.schema.Schema;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Objects;
 
-@Data
 @XmlType(propOrder = {"value","ref","display","type"})
 @XmlAccessorType(XmlAccessType.NONE)
 public class UserGroup implements Serializable {
 
-  private static final long serialVersionUID = 9126588075353486789L;
+  public static final String TYPE_DIRECT = "direct";
+  public static final String TYPE_INDIRECT = "indirect";
 
+  private static final long serialVersionUID = 8698508874413555857L;
+
+  public String getValue() {
+    return this.value;
+  }
+
+  public UserGroup setValue(String value) {
+    this.value = value;
+    return this;
+  }
+
+  public String getRef() {
+    return this.ref;
+  }
+
+  public UserGroup setRef(String ref) {
+    this.ref = ref;
+    return this;
+  }
+
+  public String getDisplay() {
+    return this.display;
+  }
+
+  public UserGroup setDisplay(String display) {
+    this.display = display;
+    return this;
+  }
+
+  public String getType() {
+    return this.type;
+  }
+
+  public UserGroup setType(String type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * @deprecated The list of user group types is not limited to the canonical list, use strings instead.
+   */
+  @Deprecated
+  public UserGroup setType(Type type) {
+    this.type = type.toString();
+    return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+
+    UserGroup userGroup = (UserGroup) o;
+    return Objects.equals(getValue(), userGroup.getValue())
+      && Objects.equals(getRef(), userGroup.getRef())
+      && Objects.equals(getDisplay(), userGroup.getDisplay())
+      && Objects.equals(getType(), userGroup.getType());
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hashCode(getValue());
+    result = 31 * result + Objects.hashCode(getRef());
+    result = 31 * result + Objects.hashCode(getDisplay());
+    result = 31 * result + Objects.hashCode(getType());
+    return result;
+  }
+
+  public String toString() {
+    return "UserGroup(value=" + this.getValue() + ", ref=" + this.getRef() + ", display=" + this.getDisplay() + ", type=" + this.getType() + ")";
+  }
+
+  /**
+   * Canonical list of group types.
+   * @deprecated The list of user group types is not limited to the canonical list, use strings instead.
+   */
+  @Deprecated
   @XmlEnum
   public enum Type {
-    @XmlEnumValue("direct") DIRECT,
-    @XmlEnumValue("indirect") INDIRECT;
+    @XmlEnumValue(TYPE_DIRECT) DIRECT(TYPE_DIRECT),
+    @XmlEnumValue(TYPE_INDIRECT) INDIRECT(TYPE_INDIRECT);
+
+    private final String name;
+
+    Type(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String toString() {
+      return name;
+    }
+
+    public static UserGroup.Type fromString(String name) {
+      return UserGroup.Type.valueOf(name.toUpperCase(Locale.ROOT));
+    }
   }
   
   @ScimAttribute(description="The identifier of the User's group.",
@@ -66,5 +158,5 @@ public class UserGroup implements Serializable {
     canonicalValueList={"direct", "indirect"},
     mutability = Schema.Attribute.Mutability.READ_ONLY)
   @XmlElement
-  Type type;
+  String type;
 }

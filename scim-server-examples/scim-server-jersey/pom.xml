@@ -93,12 +93,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.directory.scimple</groupId>
       <artifactId>scim-compliance-tests</artifactId>
       <scope>test</scope>
@@ -110,7 +104,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
         <configuration>
           <mainClass>org.apache.directory.scim.example.jersey.JerseyApplication</mainClass>
         </configuration>

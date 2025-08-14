@@ -46,10 +46,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
 
       - name: Set up Java 17-zulu
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 #v4.7.0
         with:
           java-version: ${{ matrix.javaVersion }}
           distribution: ${{ matrix.javaDistribution }}
@@ -57,19 +57,22 @@ jobs:
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@4e828ff8d448a8a6e532957b1811f387a63867e8 #v3.29.4
         with:
           languages: ${{ matrix.language }}
 
       - name: Maven Build
-        run: ./mvnw verify pmd:aggregate-pmd -Pci
+        run: |
+          ./mvnw verify pmd:aggregate-pmd -Pci \
+            -Ddevelocity.cache.local.enabled=false \
+            -Ddevelocity.cache.remote.enabled=false
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@4e828ff8d448a8a6e532957b1811f387a63867e8 #v3.29.4
         with:
           category: "/language:${{matrix.language}}"
 
       - name: Upload PMD Analysis
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@4e828ff8d448a8a6e532957b1811f387a63867e8 #v3.29.4
         with:
           sarif_file: target/pmd.sarif.json

@@ -25,24 +25,116 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlType;
-import lombok.Data;
 import org.apache.directory.scim.spec.annotation.ScimAttribute;
 import org.apache.directory.scim.spec.annotation.ScimResourceIdReference;
 import org.apache.directory.scim.spec.schema.Schema;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Objects;
 
-@Data
 @XmlType(propOrder = {"value","ref","display","type"})
 @XmlAccessorType(XmlAccessType.NONE)
 public class GroupMembership implements Serializable {
 
-  private static final long serialVersionUID = 9126588075353486789L;
+  private static final long serialVersionUID = 6418041921926482112L;
 
+  public static final String TYPE_USER = "User";
+  public static final String TYPE_GROUP = "Group";
+
+  public String getValue() {
+    return this.value;
+  }
+
+  public GroupMembership setValue(String value) {
+    this.value = value;
+    return this;
+  }
+
+  public String getRef() {
+    return this.ref;
+  }
+
+  public GroupMembership setRef(String ref) {
+    this.ref = ref;
+    return this;
+  }
+
+  public String getDisplay() {
+    return this.display;
+  }
+
+  public GroupMembership setDisplay(String display) {
+    this.display = display;
+    return this;
+  }
+
+  public String getType() {
+    return this.type;
+  }
+
+  public GroupMembership setType(String type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * @deprecated The list of membership types is not limited to the canonical list, use strings instead.
+   */
+  @Deprecated
+  public GroupMembership setType(Type type) {
+    this.type = type.toString();
+    return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+
+    GroupMembership that = (GroupMembership) o;
+    return Objects.equals(getValue(), that.getValue())
+      && Objects.equals(getRef(), that.getRef())
+      && Objects.equals(getDisplay(), that.getDisplay())
+      && Objects.equals(getType(), that.getType());
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hashCode(getValue());
+    result = 31 * result + Objects.hashCode(getRef());
+    result = 31 * result + Objects.hashCode(getDisplay());
+    result = 31 * result + Objects.hashCode(getType());
+    return result;
+  }
+
+  public String toString() {
+    return "GroupMembership(value=" + this.getValue() + ", ref=" + this.getRef() + ", display=" + this.getDisplay() + ", type=" + this.getType() + ")";
+  }
+
+  /**
+   * Canonical list of membership types.
+   * @deprecated The list of membership types is not limited to the canonical list, use strings instead.
+   */
+  @Deprecated
   @XmlEnum
   public enum Type {
-    @XmlEnumValue("User") USER,
-    @XmlEnumValue("Group") GROUP;
+    @XmlEnumValue(TYPE_USER) USER(TYPE_USER),
+    @XmlEnumValue(TYPE_GROUP) GROUP(TYPE_GROUP);
+
+    private final String name;
+
+    Type(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String toString() {
+      return name;
+    }
+
+    public static Type fromString(String name) {
+      return Type.valueOf(name.toUpperCase(Locale.ROOT));
+    }
   }
   
   @ScimAttribute(description="Identifier of the member of this Group.",
@@ -66,5 +158,5 @@ public class GroupMembership implements Serializable {
     canonicalValueList={"User", "Group"},
     mutability = Schema.Attribute.Mutability.IMMUTABLE)
   @XmlElement
-  Type type;
+  String type;
 }
