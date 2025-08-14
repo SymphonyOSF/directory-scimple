@@ -23,12 +23,13 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
-
 import org.apache.directory.scim.spec.annotation.ScimAttribute;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Scim core schema, <a href="https://tools.ietf.org/html/rfc7643#section-4.1.2">section 4.1.2</a>
- *
  */
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
@@ -92,45 +93,34 @@ public class Entitlement implements Serializable, TypedAttribute {
     return this;
   }
 
-  public String toString() {
-    return "Entitlement(type=" + this.getType() + ", value=" + this.getValue() + ", display=" + this.getDisplay() + ", primary=" + this.getPrimary() + ")";
+  public String getDataSource() {
+    return dataSource;
   }
 
-  public boolean equals(final Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Entitlement)) return false;
-    final Entitlement other = (Entitlement) o;
-    if (!other.canEqual((Object) this)) return false;
-    final Object this$type = this.getType();
-    final Object other$type = other.getType();
-    if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-    final Object this$value = this.getValue();
-    final Object other$value = other.getValue();
-    if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
-    final Object this$display = this.getDisplay();
-    final Object other$display = other.getDisplay();
-    if (this$display == null ? other$display != null : !this$display.equals(other$display)) return false;
-    final Object this$primary = this.getPrimary();
-    final Object other$primary = other.getPrimary();
-    if (this$primary == null ? other$primary != null : !this$primary.equals(other$primary)) return false;
-    return true;
+  public void setDataSource(String dataSource) {
+    this.dataSource = dataSource;
   }
 
-  protected boolean canEqual(final Object other) {
-    return other instanceof Entitlement;
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Entitlement that = (Entitlement) o;
+    return Objects.equals(type, that.type) && Objects.equals(value, that.value) && Objects.equals(display, that.display) && Objects.equals(primary, that.primary) && Objects.equals(dataSource, that.dataSource);
   }
 
+  @Override
   public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final Object $type = this.getType();
-    result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-    final Object $value = this.getValue();
-    result = result * PRIME + ($value == null ? 43 : $value.hashCode());
-    final Object $display = this.getDisplay();
-    result = result * PRIME + ($display == null ? 43 : $display.hashCode());
-    final Object $primary = this.getPrimary();
-    result = result * PRIME + ($primary == null ? 43 : $primary.hashCode());
-    return result;
+    return Objects.hash(type, value, display, primary, dataSource);
+  }
+
+  @Override
+  public String toString() {
+    return "Entitlement{" +
+      "type='" + type + '\'' +
+      ", value='" + value + '\'' +
+      ", display='" + display + '\'' +
+      ", primary=" + primary +
+      ", dataSource='" + dataSource + '\'' +
+      '}';
   }
 }
